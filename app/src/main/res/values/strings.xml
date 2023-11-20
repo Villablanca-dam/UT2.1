@@ -3,5 +3,6 @@
     <string name="lanza">lanza</string>
 
     <string name="title_activity_invitacion">InvitacionActivity</string>
+    <string name="title_activity_bdatos">BDatos</string>
 
 </resources>

@@ -15,17 +15,6 @@
         android:theme="@style/Theme.DiceRoller"
         tools:targetApi="31">
         <activity
-            android:name="edu.villablanca.invitacion.InvitacionActivity"
-            android:exported="true"
-            android:label="@string/title_activity_invitacion"
-            android:theme="@style/Theme.DiceRoller">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name="edu.villablanca.bdatos.BDatos"
             android:exported="true"
             android:label="@string/title_activity_bdatos"
@@ -36,6 +25,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="edu.villablanca.invitacion.InvitacionActivity"
+            android:exported="true"
+            android:label="@string/title_activity_invitacion"
+            android:theme="@style/Theme.DiceRoller">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
 
         <activity
             android:name=".MainActivity"

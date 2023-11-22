@@ -3,7 +3,9 @@ package edu.villablanca.bdatos
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,10 +28,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import edu.villablanca.bdatos.ui.theme.DiceRollerTheme
 
+/**
+ * @author
+ * Ejemplo de formulario CRUD para una base de datos
+ */
 class BDatos : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,12 +60,18 @@ class BDatos : ComponentActivity() {
 }
 
 
-
+/**
+ * Ventana de creacion
+ * @param  bd Base de datos
+ * @param  siguienteMenu  lambda para actualizar el estado de menu
+ * @param  estado lambda para actualizar campo de estado en la pantalla principal
+ *
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CrearCard(bd: BDSim,
-              siguienteMenu: (String)-> Unit,
-              estado: (String) -> Unit){
+fun PantallaCrear(bd: BDSim,
+                  siguienteMenu: (String)-> Unit,
+                  estado: (String) -> Unit){
 
     var nombre by remember { mutableStateOf("") }
     var correo by remember { mutableStateOf("") }
@@ -94,12 +110,19 @@ fun CrearCard(bd: BDSim,
         }
     }
 }
-/*
-    Version lectura con get, menos recomendable
+
+
+
+/**
+ * Ventana  lectura con get, menos recomendable
+ * @param  bd Base de datos
+ * @param  siguienteMenu  lambda para actualizar el estado de menu
+ * @param  estado lambda para actualizar campo de estado en la pantalla principal
+ *
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LecturaCard(
+fun PantallaLeer(
     bd: BDSim,
     siguienteMenu: (String) -> Unit,
     estado: (String) -> Unit
@@ -117,7 +140,7 @@ fun LecturaCard(
         OutlinedTextField(
             value = id,
             onValueChange = { id = it },
-            label = { Text("Demo CRUD con FireBase Realtime DB") }
+            label = { Text("Nombre usuario") }
         )
 
         Button(onClick = {
@@ -134,9 +157,18 @@ fun LecturaCard(
 }
 
 
+
+
+/**
+ * Ventana  borrar
+ * @param  bd Base de datos
+ * @param  siguienteMenu  lambda para actualizar el estado de menu
+ * @param  estado lambda para actualizar campo de estado en la pantalla principal
+ *
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BorrarCard(
+fun PantallaBorrar(
     bd: BDSim,
     siguienteMenu: (String) -> Unit,
     estado: (String) -> Unit
@@ -173,9 +205,16 @@ fun BorrarCard(
 }
 
 
+/**
+ * Ventana  actualizar con get, menos recomendable
+ * @param  bd Base de datos
+ * @param  siguienteMenu  lambda para actualizar el estado de menu
+ * @param  estado lambda para actualizar campo de estado en la pantalla principal
+ *
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ActualizarCard(
+fun PantallaActualizar(
     bd: BDSim,
     siguienteMenu: (String) -> Unit,
     estado: (String) -> Unit
@@ -260,25 +299,66 @@ fun ActualizarCard(
 
 }
 
+
+
+/**
+ * Ventana  muestra el menu.
+ * @param onSelect lambda para actualizar el estado de la opcion elegida (elevacion de estados)
+ *
+ */
 @Composable
-fun menu(selec: (String)-> Unit) {
+fun MenuCard(onSelect: (String)-> Unit) {
     Column {
-        Button(onClick = { selec("C") }) {
+        Button(onClick = { onSelect("C") }) {
             Text(text = "Crear Usario")
         }
-        Button(onClick = { selec("R") }) {
+        Button(onClick = { onSelect("R") }) {
             Text(text = "(R) Leer")
         }
-        Button(onClick = { selec("U") }) {
+        Button(onClick = { onSelect("U") }) {
             Text(text = "(U) Actualizar")
         }
-        Button(onClick = { selec("D") }) {
+        Button(onClick = { onSelect("D") }) {
             Text(text = "(D) Borrar")
         }
     }
 }
 
 
+
+
+@Composable
+fun OLText(texto: String){
+    Box{
+        Text(
+            text = texto,
+            style = TextStyle(
+                fontSize = 16.sp,
+                fontWeight = FontWeight.ExtraBold,
+                letterSpacing = 0.5.sp,
+                color = Color.Black // Color del contorno
+            ),
+            modifier = Modifier.align(Alignment.Center).border(2.dp, Color.Black)
+        )
+        Text(
+            text = "Estado",
+            style = TextStyle(
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 0.5.sp,
+                color = Color.Red // Color del texto principal
+            ),
+
+            modifier = Modifier.align(Alignment.TopStart)
+        )
+    }
+}
+/**
+ * Ventana  principal
+ * @param  bd Base de datos
+ * @param  modifier
+ *
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PantallaPrincipal( bd: BDSim , modifier: Modifier = Modifier) {
@@ -286,8 +366,6 @@ fun PantallaPrincipal( bd: BDSim , modifier: Modifier = Modifier) {
     var text by remember { mutableStateOf<String>("") }
     var operacion by remember { mutableStateOf("I") }
     var estadoUltimo by remember {  mutableStateOf("ultimo estado") }
-
-
 
     Column(
         modifier = Modifier
@@ -297,37 +375,37 @@ fun PantallaPrincipal( bd: BDSim , modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.SpaceBetween
     ) {
 
-        TextField(
-            value = text,
-            onValueChange = { text = it },
-            label = { Text("Demo CRUD con FireBase Realtime DB") }
+        Text(
+            text="Demo de formulario Base de Datos"
         )
         Spacer(modifier = Modifier.height(8.dp))
 
         // menu y operaciones
         when(operacion){
-            "I" -> menu(selec = {nueva: String -> operacion = nueva})
+            "I" -> MenuCard(onSelect = { nueva: String -> operacion = nueva})
 
             "C" -> {
-                CrearCard(bd = bd,{ nueva: String -> operacion = nueva} ){ estadoUltimo = it}
+                PantallaCrear(bd = bd,{ nueva: String -> operacion = nueva} ){ estadoUltimo = it}
 
             }
             "R"  ->{
-                LecturaCard(bd , { nueva: String -> operacion = nueva} ){ estadoUltimo = it}
+                PantallaLeer(bd , { nueva: String -> operacion = nueva} ){ estadoUltimo = it}
 
             }
             "U" -> {
-                ActualizarCard(bd , { nueva: String -> operacion = nueva} ){ estadoUltimo = it}
+                PantallaActualizar(bd , { nueva: String -> operacion = nueva} ){ estadoUltimo = it}
             }
             "D" -> {
-                BorrarCard(bd , { nueva: String -> operacion = nueva} ){ estadoUltimo = it}
+                PantallaBorrar(bd , { nueva: String -> operacion = nueva} ){ estadoUltimo = it}
             }
             else -> println("Error")
 
         }
 
-        Text(text = estadoUltimo)
 
+         OLText(texto = estadoUltimo,
+            //modifier = Modifier.border(1.dp, Color.Red)
+            )
 
     }
 
